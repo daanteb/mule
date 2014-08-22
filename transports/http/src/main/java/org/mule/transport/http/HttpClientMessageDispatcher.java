@@ -297,7 +297,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
                     return getResponseFromMethod(httpResponse, ep);
                 }
             }
-            releaseConn = httpResponse.getEntity().getContent() == null;
+            releaseConn = httpResponse.getEntity() == null;
             return getResponseFromMethod(httpResponse, ep);
         }
         catch (Exception e)
