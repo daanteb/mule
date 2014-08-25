@@ -6,6 +6,24 @@
  */
 package org.mule.transport.http;
 
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpHost;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.util.EntityUtils;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.BasicAuthCache;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.client.AuthCache;
+import org.apache.http.impl.auth.BasicScheme;
 import org.mule.VoidMuleEvent;
 import org.mule.api.ExceptionPayload;
 import org.mule.api.MuleEvent;
@@ -31,18 +49,6 @@ import org.mule.util.StringUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
-
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.http.Header;
-import org.apache.http.HttpHost;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.util.EntityUtils;
 
 /**
  * <code>HttpClientMessageDispatcher</code> dispatches Mule events over HTTP.
@@ -123,7 +129,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
     {
         org.apache.http.HttpRequest httpMethod = getMethod(event);
 
-        httpConnector.setupClientAuthorization(event, httpMethod, client, endpoint);
+        //httpConnector.setupClientAuthorization(event, httpMethod, client, endpoint);
 
         org.apache.http.HttpResponse response = null;
 
@@ -166,10 +172,29 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
 
             this.processMuleSession(event, httpMethod);
 
+            HttpHost host = getHostConfig(uri);
+
             CookieStore cookieStore = new BasicCookieStore();
             HttpClientContext context = HttpClientContext.create();
             context.setCookieStore(cookieStore);
             this.processCookies(event, cookieStore);
+
+            String userInfo = this.endpoint.getEndpointURI().getUserInfo();
+            if (userInfo != null && !userInfo.isEmpty()) {
+                // create credentials provider
+                CredentialsProvider credsProvider = new BasicCredentialsProvider();
+                credsProvider.setCredentials(new AuthScope(host.getHostName(), host.getPort()), new UsernamePasswordCredentials(userInfo));
+
+                // Create AuthCache instance
+                AuthCache authCache = new BasicAuthCache();
+                // Generate BASIC scheme object and add it to the local auth cache
+                BasicScheme basicAuth = new BasicScheme();
+                authCache.put(host, basicAuth);
+
+                context.setCredentialsProvider(credsProvider);
+                context.setAuthCache(authCache);
+
+            }
 
             return client.execute(getHostConfig(uri), httpMethod, context);
         }

@@ -172,7 +172,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageTransformer
         final Object src = msg.getPayload();
         URI uri = getURI(msg);
 
-        String query = uri.getRawQuery();
+        String query = uri.getQuery();
 
         String paramName = msg.getOutboundProperty(HttpConnector.HTTP_GET_BODY_PARAM_PROPERTY, null);
         if (paramName != null)

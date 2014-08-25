@@ -32,6 +32,7 @@ import java.util.StringTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HeaderElement;
 import org.apache.http.NameValuePair;
 import org.apache.http.ProtocolVersion;
@@ -115,10 +116,10 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
 
     protected Object extractPayloadFromHttpResponse(org.apache.http.HttpResponse httpResponse) throws IOException
     {
-        InputStream body = httpResponse.getEntity().getContent();
-        if (body != null)
+        HttpEntity entity = httpResponse.getEntity();
+        if (entity != null)
         {
-            return new ReleasingInputStream(body, httpResponse);
+            return new ReleasingInputStream(entity.getContent(), httpResponse);
         }
         else
         {
