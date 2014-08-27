@@ -335,10 +335,8 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         }
         finally
         {
-            if (releaseConn)
-            {
-                if (httpResponse != null)
-                {
+            if (releaseConn) {
+                if (httpResponse != null) {
                     EntityUtils.consumeQuietly(httpResponse.getEntity());
                 }
             }
@@ -381,7 +379,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
 
         if (logger.isDebugEnabled())
         {
-            logger.debug("Http response is: " + message.getOutboundProperty(HttpConnector.HTTP_STATUS_PROPERTY));
+            logger.debug("Http response is: " + message.getInboundProperty(HttpConnector.HTTP_STATUS_PROPERTY));
         }
 
         message.setExceptionPayload(ep);

@@ -6,6 +6,7 @@
  */
 package org.mule.transport.http;
 
+import org.apache.http.util.EntityUtils;
 import org.mule.model.streaming.DelegatingInputStream;
 
 import java.io.IOException;
@@ -29,7 +30,7 @@ public class ReleasingInputStream extends DelegatingInputStream
 
         if (method != null)
         {
-            method.getEntity().getContent().close();
+            EntityUtils.consumeQuietly(method.getEntity());
         }
     }
 }
