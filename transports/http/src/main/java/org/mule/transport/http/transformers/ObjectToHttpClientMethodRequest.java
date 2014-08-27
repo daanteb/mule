@@ -322,7 +322,10 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageTransformer
                 HttpMessages.eventPropertyNotSetCannotProcessRequest(MuleProperties.MULE_ENDPOINT_PROPERTY),
                 this);
         }
-        return new URI(endpointAddress);
+        URI withUserInfo = new URI(endpointAddress);
+        return new URI(withUserInfo.getScheme(),
+                null, withUserInfo.getHost(), withUserInfo.getPort(),
+                withUserInfo.getPath(), withUserInfo.getQuery(), withUserInfo.getFragment());
     }
 
     protected void setupEntityMethod(Object src,

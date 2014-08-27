@@ -193,10 +193,9 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
 
                 context.setCredentialsProvider(credsProvider);
                 context.setAuthCache(authCache);
-
             }
 
-            return client.execute(getHostConfig(uri), httpMethod, context);
+            return client.execute(host, httpMethod, context);
         }
         catch (IOException e)
         {
