@@ -136,6 +136,8 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
         Map<String, Object> httpHeaders = new HashMap<String, Object>();
         Map<String, Object> queryParameters = new HashMap<String, Object>();
 
+        String uri = this.uri;
+
         if (transportMessage instanceof HttpRequest)
         {
             HttpRequest httpRequest = (HttpRequest) transportMessage;
