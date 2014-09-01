@@ -61,7 +61,6 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
     public static final int ERROR_STATUS_CODE_RANGE_START = 400;
     public static final int REDIRECT_STATUS_CODE_RANGE_START = 300;
     protected final HttpConnector httpConnector;
-    private volatile HttpClient client = null;
     private final Transformer sendTransformer;
 
     public HttpClientMessageDispatcher(OutboundEndpoint endpoint)
@@ -112,16 +111,16 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
     @Override
     protected void doConnect() throws Exception
     {
-        if (client == null)
-        {
-            client = httpConnector.doClientConnect();
-        }
+//        if (client == null)
+//        {
+//            client = httpConnector.doClientConnect();
+//        }
     }
 
     @Override
     protected void doDisconnect() throws Exception
     {
-        client = null;
+//        client = null;
     }
 
     @Override
@@ -167,6 +166,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
         // TODO set connection timeout buffer etc
         try
         {
+            HttpClient client = httpConnector.doClientConnect();
 
             URI uri = endpoint.getEndpointURI().getUri();
 
