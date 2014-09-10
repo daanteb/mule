@@ -258,6 +258,7 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
                 .setSocketTimeout(endpoint.getResponseTimeout())
                 .setStaleConnectionCheckEnabled(((HttpConnector) connector).isStaleConnectionCheckEnabled())
                 .setConnectTimeout(((TcpConnector) connector).getConnectionTimeout())
+                .setConnectionRequestTimeout(((TcpConnector) connector).getConnectionTimeout())
                 .setRedirectsEnabled(
                     "true".equalsIgnoreCase((String) endpoint.getProperty("followRedirects")))
                 .setCookieSpec(
