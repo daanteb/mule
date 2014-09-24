@@ -112,7 +112,7 @@
         <commonsCodecVersion>1.3</commonsCodecVersion>
         <commonsCollectionsVersion>3.2.1</commonsCollectionsVersion>
         <commonsDbUtilsVersion>1.2</commonsDbUtilsVersion>
-        <!--<commonsHttpClientVersion>4.2</commonsHttpClientVersion>-->
+        <commonsHttpClientVersion>4.3.5</commonsHttpClientVersion>
         <commonsIoVersion>1.4</commonsIoVersion>
         <commonsJxpathVersion>1.3</commonsJxpathVersion>
         <commonsLangVersion>2.4</commonsLangVersion>
@@ -724,7 +724,7 @@
                 <!--//TODO(pablo.kraan):check if this needs exclusions like before-->
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
-                <version>4.3.3</version>
+                <version>4.3.5</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>

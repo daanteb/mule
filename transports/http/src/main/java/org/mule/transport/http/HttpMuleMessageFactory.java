@@ -6,6 +6,12 @@
  */
 package org.mule.transport.http;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.*;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.cookie.MalformedCookieException;
+import org.apache.http.message.BasicHeader;
 import org.mule.DefaultMuleMessage;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleContext;
@@ -23,22 +29,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HeaderElement;
-import org.apache.http.NameValuePair;
-import org.apache.http.ProtocolVersion;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.cookie.MalformedCookieException;
-import org.apache.http.message.BasicHeader;
+import java.util.*;
 
 public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
 {
@@ -49,7 +40,7 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
     private boolean enableCookies = false;
     private String cookieSpec;
     private MessageExchangePattern exchangePattern = MessageExchangePattern.REQUEST_RESPONSE;
-    private String httpMethod;
+    //private String httpMethod;
     private String uri;
 
     public HttpMuleMessageFactory()
@@ -137,6 +128,7 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
         Map<String, Object> queryParameters = new HashMap<String, Object>();
 
         String uri = this.uri;
+        String httpMethod = null;
 
         if (transportMessage instanceof HttpRequest)
         {
@@ -444,10 +436,10 @@ public class HttpMuleMessageFactory extends AbstractMuleMessageFactory
         exchangePattern = mep;
     }
 
-    public void setHttpMethod(String httpMethod)
-    {
-        this.httpMethod = httpMethod;
-    }
+//    public void setHttpMethod(String httpMethod)
+//    {
+//        this.httpMethod = httpMethod;
+//    }
 
     public void setUri(String uri)
     {

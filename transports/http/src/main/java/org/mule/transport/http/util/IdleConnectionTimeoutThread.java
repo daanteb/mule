@@ -6,11 +6,11 @@
  */
 package org.mule.transport.http.util;
 
+import org.apache.http.conn.HttpClientConnectionManager;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.http.conn.HttpClientConnectionManager;
 
 /**
  * A utility class for periodically closing idle connections.
@@ -69,6 +69,7 @@ public class IdleConnectionTimeoutThread extends Thread
         {
             for (HttpClientConnectionManager connManager : connectionManagers)
             {
+                connManager.closeExpiredConnections();
                 connManager.closeIdleConnections(connectionTimeout, TimeUnit.MILLISECONDS);
             }
 

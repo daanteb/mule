@@ -6,13 +6,10 @@
  */
 package org.mule.transport.http;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import org.apache.http.*;
+import org.apache.http.HttpResponse;
+import org.apache.http.message.BasicHeader;
+import org.junit.Test;
 import org.mule.MessageExchangePattern;
 import org.mule.api.MuleMessage;
 import org.mule.api.transport.MessageTypeNotSupportedException;
@@ -26,13 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.StatusLine;
-import org.apache.http.message.BasicHeader;
-import org.junit.Test;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class HttpMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTestCase
 {
@@ -137,7 +130,7 @@ public class HttpMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTe
         org.apache.http.HttpResponse method = createMockHttpResponse(HttpConstants.METHOD_GET, body, URI, HEADERS);
 
         HttpMuleMessageFactory factory = (HttpMuleMessageFactory) createMuleMessageFactory();
-        factory.setHttpMethod(HttpConstants.METHOD_GET);
+        //factory.setHttpMethod(HttpConstants.METHOD_GET);
         MuleMessage message = factory.create(method, encoding, muleContext);
         assertNotNull(message);
         assertEquals("/services/Echo", message.getPayloadAsString());
@@ -153,7 +146,7 @@ public class HttpMuleMessageFactoryTestCase extends AbstractMuleMessageFactoryTe
         HttpResponse method = createMockHttpResponse(HttpConstants.METHOD_POST, body, "http://localhost/services/Echo", HEADERS);
 
         HttpMuleMessageFactory factory = (HttpMuleMessageFactory) createMuleMessageFactory();
-        factory.setHttpMethod(HttpConstants.METHOD_POST);
+        //factory.setHttpMethod(HttpConstants.METHOD_POST);
         MuleMessage message = factory.create(method, encoding, muleContext);
         assertNotNull(message);
         assertEquals(TEST_MESSAGE, message.getPayloadAsString());
