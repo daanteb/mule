@@ -12,6 +12,7 @@ import org.apache.http.HttpRequest;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
@@ -42,7 +43,6 @@ import org.mule.transport.http.i18n.HttpMessages;
 import org.mule.util.IOUtils;
 import org.mule.util.ObjectUtils;
 import org.mule.util.SerializationUtils;
-import org.mule.util.StringUtils;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -50,9 +50,7 @@ import javax.activation.URLDataSource;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -159,56 +157,14 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageTransformer
 
     protected HttpRequestBase createGetMethod(MuleMessage msg, String outputEncoding) throws Exception
     {
-        final Object src = msg.getPayload();
-        URI uri = getURI(msg);
+        URIBuilder uri = getURI(msg);
 
-        String query = uri.getQuery();
-
-        String paramName = msg.getOutboundProperty(HttpConnector.HTTP_GET_BODY_PARAM_PROPERTY, null);
-        if (paramName != null)
-        {
-            paramName = URLEncoder.encode(paramName, outputEncoding);
-
-            String paramValue;
-            Boolean encode = msg.getInvocationProperty(HttpConnector.HTTP_ENCODE_PARAMVALUE);
-            if (encode == null)
-            {
-                encode = msg.getOutboundProperty(HttpConnector.HTTP_ENCODE_PARAMVALUE, true);
-            }
-
-            if (encode)
-            {
-                paramValue = URLEncoder.encode(src.toString(), outputEncoding);
-            }
-            else
-            {
-                paramValue = src.toString();
-            }
-
-            if (!(src instanceof NullPayload) && !StringUtils.EMPTY.equals(src))
-            {
-                if (query == null)
-                {
-                    query = paramName + "=" + paramValue;
-                }
-                else
-                {
-                    query += "&" + paramName + "=" + paramValue;
-                }
-            }
-        }
-
-        if (!StringUtils.isEmpty(query))
-        {
-            uri = new URI(uri.getScheme(), null, uri.getHost(), uri.getPort(), uri.getPath(), query, null);
-        }
-
-        return new HttpGet(uri);
+        return new HttpGet(uri.toString());
     }
 
     protected HttpRequestBase createPostMethod(MuleMessage msg, String outputEncoding) throws Exception
     {
-        URI uri = getURI(msg);
+        URIBuilder uri = getURI(msg);
         HttpPost postMethod = new HttpPost(uri.toString());
 
         String bodyParameterName = getBodyParameterName(msg);
@@ -258,7 +214,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageTransformer
 
     protected HttpRequestBase createPutMethod(MuleMessage msg, String outputEncoding) throws Exception
     {
-        URI uri = getURI(msg);
+        URIBuilder uri = getURI(msg);
         HttpPut putMethod = new HttpPut(uri.toString());
 
         Object payload = msg.getPayload();
@@ -270,31 +226,31 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageTransformer
 
     protected HttpRequestBase createDeleteMethod(MuleMessage message) throws Exception
     {
-        URI uri = getURI(message);
+        URIBuilder uri = getURI(message);
         return new HttpDelete(uri.toString());
     }
 
     protected HttpRequestBase createHeadMethod(MuleMessage message) throws Exception
     {
-        URI uri = getURI(message);
+        URIBuilder uri = getURI(message);
         return new HttpHead(uri.toString());
     }
 
     protected HttpRequestBase createOptionsMethod(MuleMessage message) throws Exception
     {
-        URI uri = getURI(message);
+        URIBuilder uri = getURI(message);
         return new HttpOptions(uri.toString());
     }
 
     protected HttpRequestBase createTraceMethod(MuleMessage message) throws Exception
     {
-        URI uri = getURI(message);
+        URIBuilder uri = getURI(message);
         return new HttpTrace(uri.toString());
     }
 
     protected HttpRequestBase createPatchMethod(MuleMessage message, String outputEncoding) throws Exception
     {
-        URI uri = getURI(message);
+        URIBuilder uri = getURI(message);
         HttpPatch patchMethod = new HttpPatch(uri.toString());
 
         Object payload = message.getPayload();
@@ -303,7 +259,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageTransformer
         return patchMethod;
     }
 
-    protected URI getURI(MuleMessage message) throws URISyntaxException, TransformerException
+    protected URIBuilder getURI(MuleMessage message) throws URISyntaxException, TransformerException
     {
         String endpointAddress = message.getOutboundProperty(MuleProperties.MULE_ENDPOINT_PROPERTY, null);
         if (endpointAddress == null)
@@ -312,7 +268,17 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageTransformer
                 HttpMessages.eventPropertyNotSetCannotProcessRequest(MuleProperties.MULE_ENDPOINT_PROPERTY),
                 this);
         }
-        return new URI(endpointAddress);
+
+        //new URIBuilder().
+        URIBuilder withUserInfo = new URIBuilder(endpointAddress);
+
+        return new URIBuilder()
+                .setScheme(withUserInfo.getScheme())
+                .setHost(withUserInfo.getHost())
+                .setPort(withUserInfo.getPort())
+                .setPath(withUserInfo.getPath())
+                .setParameters(withUserInfo.getQueryParams())
+                .setFragment(withUserInfo.getFragment());
     }
 
     protected void setupEntityMethod(Object src,
