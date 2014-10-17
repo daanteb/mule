@@ -6,6 +6,22 @@
  */
 package org.mule.transport.http.transformers;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpRequest;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.*;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.message.BasicLineParser;
+import org.apache.http.message.BasicNameValuePair;
 import org.mule.RequestContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
@@ -28,6 +44,9 @@ import org.mule.util.ObjectUtils;
 import org.mule.util.SerializationUtils;
 import org.mule.util.StringUtils;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.activation.URLDataSource;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -39,35 +58,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.activation.URLDataSource;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpEntityEnclosingRequest;
-import org.apache.http.HttpRequest;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.client.methods.HttpOptions;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.methods.HttpTrace;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.InputStreamEntity;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.ByteArrayBody;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.message.BasicLineParser;
-import org.apache.http.message.BasicNameValuePair;
 
 /**
  * <code>ObjectToHttpClientMethodRequest</code> transforms a MuleMessage into a
@@ -322,10 +312,7 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageTransformer
                 HttpMessages.eventPropertyNotSetCannotProcessRequest(MuleProperties.MULE_ENDPOINT_PROPERTY),
                 this);
         }
-        URI withUserInfo = new URI(endpointAddress);
-        return new URI(withUserInfo.getScheme(),
-                null, withUserInfo.getHost(), withUserInfo.getPort(),
-                withUserInfo.getPath(), withUserInfo.getQuery(), withUserInfo.getFragment());
+        return new URI(endpointAddress);
     }
 
     protected void setupEntityMethod(Object src,

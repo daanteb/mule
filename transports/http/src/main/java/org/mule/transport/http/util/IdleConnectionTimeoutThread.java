@@ -69,7 +69,6 @@ public class IdleConnectionTimeoutThread extends Thread
         {
             for (HttpClientConnectionManager connManager : connectionManagers)
             {
-                connManager.closeExpiredConnections();
                 connManager.closeIdleConnections(connectionTimeout, TimeUnit.MILLISECONDS);
             }
 
