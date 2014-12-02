@@ -20,8 +20,8 @@ public class IdleConnectionTimeoutThread extends Thread
 
     private List<HttpClientConnectionManager> connectionManagers = new ArrayList<HttpClientConnectionManager>();
     private boolean shutdown = false;
-    private long timeoutInterval = 1000;
-    private long connectionTimeout = 3000;
+    private long timeoutInterval = 10000;
+    private long connectionTimeout = 300000;
 
     public IdleConnectionTimeoutThread()
     {
