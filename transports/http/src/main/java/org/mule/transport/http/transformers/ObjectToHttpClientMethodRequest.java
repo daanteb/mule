@@ -40,6 +40,7 @@ import org.mule.transport.http.HttpConnector;
 import org.mule.transport.http.HttpConstants;
 import org.mule.transport.http.StreamPayloadRequestEntity;
 import org.mule.transport.http.i18n.HttpMessages;
+import org.mule.transport.http.multipart.PartDataSource;
 import org.mule.util.IOUtils;
 import org.mule.util.ObjectUtils;
 import org.mule.util.SerializationUtils;
@@ -435,9 +436,21 @@ public class ObjectToHttpClientMethodRequest extends AbstractMessageTransformer
                     {
                         fileName = fileName.substring(x + 1);
                     }
+                } else if (dh.getDataSource() instanceof PartDataSource) {
+                    String contentDisposition = ((PartDataSource) dh.getDataSource()).getPart().getHeader("content-disposition");
+                    if (contentDisposition != null) {
+                        String[] contentDispositionParts = contentDisposition.split(";");
+                        for (String cdp : contentDispositionParts) {
+                            String[] keyValue = cdp.trim().split("=");
+                            if ("filename".equals(keyValue[0].trim())) {
+                                fileName = keyValue[1].trim().replace("\"", "");
+                            }
+                        }
+
+                    }
                 }
                 ContentBody contentBody = new ByteArrayBody(IOUtils.toByteArray(dh.getInputStream()), ContentType.create(dh.getContentType()), fileName);
-                builder.addPart(fileName, contentBody);
+                builder.addPart(dh.getName(), contentBody);
             }
         }
 
