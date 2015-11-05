@@ -61,6 +61,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.ResolvableType;
 
 /**
  * <code>MuleEventMulticaster</code> is an implementation of a Spring
@@ -410,6 +411,12 @@ public class MuleEventMulticaster
 
             }
         }
+    }
+
+    @Override
+    public void multicastEvent(ApplicationEvent event, ResolvableType eventType)
+    {
+        multicastEvent(event);
     }
 
     /**

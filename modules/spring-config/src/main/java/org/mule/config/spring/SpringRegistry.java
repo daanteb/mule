@@ -8,6 +8,7 @@ package org.mule.config.spring;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.mule.config.i18n.MessageFactory.createStaticMessage;
+
 import org.mule.api.Injector;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
@@ -30,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -334,9 +336,12 @@ public class SpringRegistry extends AbstractRegistry implements LifecycleRegistr
             String message = String.format("Failed to lookup beans of type %s from the Spring registry", type);
             throw new MuleRuntimeException(createStaticMessage(message), fbex);
         }
-        catch (Exception e)
+        catch (BeansException e)
         {
-            logger.debug(e.getMessage(), e);
+            if (logger.isDebugEnabled())
+            {
+                logger.debug(e.getMessage(), e);
+            }
             return Collections.emptyMap();
         }
     }
@@ -353,7 +358,7 @@ public class SpringRegistry extends AbstractRegistry implements LifecycleRegistr
             String message = String.format("Failed to lookup beans of type %s from the Spring registry", type);
             throw new MuleRuntimeException(createStaticMessage(message), fbex);
         }
-        catch (Exception e)
+        catch (BeansException e)
         {
             if (logger.isDebugEnabled())
             {
@@ -440,7 +445,7 @@ public class SpringRegistry extends AbstractRegistry implements LifecycleRegistr
             return object;
         }
 
-        private synchronized void doRegisterObject(String key, Object value) throws RegistrationException
+        private void doRegisterObject(String key, Object value) throws RegistrationException
         {
             if (applicationContext.containsBean(key))
             {

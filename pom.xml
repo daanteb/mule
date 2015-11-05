@@ -243,9 +243,8 @@
         <saxonVersion>9.6.0-1</saxonVersion>
         <slf4jVersion>1.7.7</slf4jVersion>
         <smackVersion>3.1.0</smackVersion>
-        <springOsgiVersion>1.0.2</springOsgiVersion>
-        <springVersion>4.1.6.RELEASE</springVersion>
-        <springSecurityVersion>4.0.1.RELEASE</springSecurityVersion>
+        <springVersion>4.2.2.RELEASE</springVersion>
+        <springSecurityVersion>4.0.3.RELEASE</springSecurityVersion>
         <sshCoreVersion>0.6.0</sshCoreVersion>
         <staxUtilsVersion>20080702</staxUtilsVersion>
         <staxApiVersion>3.1.4</staxApiVersion>
@@ -1765,6 +1764,7 @@
                             <exclude>**/build-number.txt</exclude>
 
                             <exclude>**/org/springframework/**</exclude>
+                            <exclude>**/org/apache/cxf/**</exclude>
                             <exclude>**/HttpTransactionContext.java</exclude>
                             <exclude>**/HttpConnection.java</exclude>
                             <exclude>**/BndMojo.java</exclude>
