@@ -193,6 +193,13 @@ public class HttpClientMessageDispatcher extends AbstractMessageDispatcher
 
                 context.setCredentialsProvider(credsProvider);
                 context.setAuthCache(authCache);
+
+                RequestConfig reqConfig = RequestConfig.custom()
+                        .setConnectTimeout(httpConnector.getConnectionTimeout())
+                        .setCookieSpec(httpConnector.getCookieSpec())
+                        .build();
+
+                context.setRequestConfig(reqConfig);
             }
 
             return client.execute(host, httpMethod, context);
