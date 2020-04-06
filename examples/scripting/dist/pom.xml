@@ -88,8 +88,8 @@
         </repository>
         <repository>
             <id>mule</id>
-            <name>Mule Dependencies</name>
-            <url>http://dist.codehaus.org/mule/dependencies/maven2</url>
+            <name>Mule Repository</name>
+            <url>https://repository.mulesoft.org/nexus/content/repositories/public/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>

@@ -290,9 +290,9 @@
         </repository>
 
         <repository>
-            <id>codehaus-repo</id>
-            <name>Codehaus Repository</name>
-            <url>http://dist.codehaus.org/mule/dependencies/maven2</url>
+            <id>mule</id>
+            <name>Mule Repository</name>
+            <url>https://repository.mulesoft.org/nexus/content/repositories/public/</url>
             <layout>default</layout>
         </repository>
     </repositories>
