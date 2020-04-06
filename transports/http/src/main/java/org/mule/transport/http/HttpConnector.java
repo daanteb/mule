@@ -46,6 +46,7 @@ import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.UserTokenHandler;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.config.ConnectionConfig;
 import org.apache.http.config.Registry;
@@ -65,6 +66,7 @@ import org.apache.http.impl.auth.SPNegoSchemeFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.protocol.HttpContext;
 
 /**
  * <code>HttpConnector</code> provides a way of receiving and sending http requests
@@ -505,6 +507,12 @@ public class HttpConnector extends TcpConnector
             .setDefaultCredentialsProvider(credsProvider)
             .setConnectionManager(clientConnectionManager)
             .setDefaultAuthSchemeRegistry(authSchemeRegistry)
+            .setUserTokenHandler(new UserTokenHandler() {
+                @Override
+                public Object getUserToken(HttpContext context) {
+                    return null;
+                }
+            })
             .build();
 
         return client;
